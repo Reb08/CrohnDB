@@ -28,11 +28,15 @@ output$volcano <- renderPlot({
   
   if (input$study == "GSE99816") {
     
-    p <- ggplot(studyInput_mutated(), aes(x=logFC, y=-log10(PValue), col=Significance, size=size()))
+    p <- ggplot(studyInput_mutated(), aes(x=logFC, y=-log10(PValue), col=Significance, size=size())) +
+      xlab(expression("log"[2]*"FC")) +
+      ylab(expression("-log"[10]*"PValue")) 
     
   } else {
     
-    p <- ggplot(studyInput_mutated(), aes(x=logFC, y=-log10(FDR), col=Significance, size=size()))
+    p <- ggplot(studyInput_mutated(), aes(x=logFC, y=-log10(FDR), col=Significance, size=size())) +
+      xlab(expression("log"[2]*"FC")) +
+      ylab(expression("-log"[10]*"FDR")) 
     
   }
   
@@ -40,8 +44,6 @@ output$volcano <- renderPlot({
     geom_point()+
     theme_bw() +
     scale_size_continuous(guide = "none") +  
-    xlab(expression("log"[2]*"FC")) +
-    ylab(expression("-log"[10]*"FDR")) +
     scale_color_manual(values = c("Unchanged" = "gray",
                                   "Down-reg protein-coding gene" = "firebrick1",
                                   "Up-reg protein-coding gene" = "dodgerblue3",
@@ -59,51 +61,3 @@ output$volcano <- renderPlot({
 })
 
 
-# output$volcano <- renderPlot({
-#   
-#   if (input$study == "GSE99816") {
-#     
-#     ggplot(studyInput_mutated(), aes(x=logFC, y=-log10(PValue), col=Significance, size=size()))+
-#       geom_point()+
-#       theme_bw() +
-#       scale_size_continuous(guide = "none") +  
-#       xlab(expression("log"[2]*"FC")) +
-#       ylab(expression("-log"[10]*"FDR")) +
-#       scale_color_manual(values = c("Unchanged" = "gray",
-#                                     "Down-reg protein-coding gene" = "firebrick1",
-#                                     "Up-reg protein-coding gene" = "dodgerblue3",
-#                                     "Down-reg lncRNA" = "seagreen4",
-#                                     "Up-reg lncRNA" = "purple4")) +
-#       guides(colour = guide_legend(override.aes = list(size=1.5)))+
-#       theme(axis.title = element_text(size=18), 
-#             axis.text=element_text(size=11), 
-#             legend.text=element_text(size=14), 
-#             legend.title=element_blank(), 
-#             plot.title=element_text(size=20), 
-#             plot.subtitle = element_text(size=15))+
-#       labs(title=input$comparison, subtitle=selected_gene())
-#     
-#   } else { 
-#     
-#     ggplot(studyInput_mutated(), aes(x=logFC, y=-log10(FDR), col=Significance, size=size()))+
-#     geom_point()+
-#     theme_bw() +
-#     scale_size_continuous(guide = "none") +  
-#     xlab(expression("log"[2]*"FC")) +
-#     ylab(expression("-log"[10]*"FDR")) +
-#     scale_color_manual(values = c("Unchanged" = "gray",
-#                                   "Down-reg protein-coding gene" = "firebrick1",
-#                                   "Up-reg protein-coding gene" = "dodgerblue3",
-#                                   "Down-reg lncRNA" = "seagreen4",
-#                                   "Up-reg lncRNA" = "purple4")) +
-#     guides(colour = guide_legend(override.aes = list(size=1.5)))+
-#     theme(axis.title = element_text(size=18), 
-#           axis.text=element_text(size=11), 
-#           legend.text=element_text(size=14), 
-#           legend.title=element_blank(), 
-#           plot.title=element_text(size=20), 
-#           plot.subtitle = element_text(size=15))+
-#     labs(title=input$comparison, subtitle=selected_gene())
-#     
-#   }  
-# })
