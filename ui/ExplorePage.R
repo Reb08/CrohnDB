@@ -104,7 +104,7 @@ tabPanel(title=list(icon("binoculars"), "Explore"),
                     # heatmap (can choose between displaying lncRNAs or protein-coding genes) 
                     
                     tabPanel("Heatmap", h3("Heatmap", style = "color:#2c3e50"),
-                             helpText("Heatmap of differentially expressed genes from the selected study and comparison. CPM were used to generate the plot"),
+                             helpText("Heatmap of the top 30 differentially expressed genes from the selected study and comparison. CPM were used to generate the plot"),
                              br(),
                              br(),
                              fluidRow(
@@ -113,18 +113,23 @@ tabPanel(title=list(icon("binoculars"), "Explore"),
                                                    h5("Select gene type", style = "color:#2c3e50"),
                                                    choices = list("lncRNA genes", "Protein-coding genes"),
                                                    selected="lncRNA genes")),
-                               column(5, 
-                                      div(tags$label(), style = "margin-bottom: 5px"),
-                                      div(actionButton("fullscreen", "Full Screen", class = "btn-primary")),
-                                      helpText("Visualise heatmap in full screen mode"))
+                               # column(5, 
+                               #        div(tags$label(), style = "margin-bottom: 5px"),
+                               #        div(actionButton("fullscreen", "Full Screen", class = "btn-primary")),
+                               #        helpText("Visualise heatmap in full screen mode"))
                                
                              ),
                              
                              br(),
                              fluidRow(
-                               column(11, offset = 1, 
-                                      # fullscreen_this(plotlyOutput("heatmap"), click_id = "fullscreen"))
-                                      plotlyOutput("heatmap"))
+                               column(12, 
+                                      #fullscreen_this(plotOutput("heatmap"), click_id = "fullscreen"))
+                                      plotlyOutput("heatmap") %>% withSpinner(color="#0dc5c1")),
+                               br(),
+                               hidden(p("No DEGs found",
+                                        id = "no_heatmap",
+                                        style = "color:black; text-align: center; position: absolute; top: 50%; left: 75%; transform: translate(-50%, -25%);")
+                               )
                              ),
     
                     ),

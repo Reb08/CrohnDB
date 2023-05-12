@@ -27,6 +27,7 @@ library(tidyverse)
 library(htmlwidgets)
 library(ggplotify)
 library(shinyfullscreen)
+library(dendextend)
 library(UpSetR, include.only = c("upset", "fromList"))
 
 
@@ -250,7 +251,7 @@ server <- function(input, output, session){
   source(file.path("server", "boxPlot2.R"), local=TRUE)$value
   source(file.path("server", "summaryTable.R"), local=TRUE)$value
   source(file.path("server", "volcanoPlot.R"), local=TRUE)$value
-  source(file.path("server", "heatmapPlot.R"), local=TRUE)$value
+  source(file.path("server", "heatmapPlot2.R"), local=TRUE)$value
   source(file.path("server", "GOPlot.R"), local=TRUE)$value
   source(file.path("server", "KEGGPlot.R"), local=TRUE)$value
   source(file.path("server", "upsetPlot.R"), local=TRUE)$value
