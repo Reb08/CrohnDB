@@ -1,4 +1,6 @@
 library(shiny)
+library(BiocManager)
+options(repos = BiocManager::repositories())
 library(shinyWidgets)
 library(shinyjs)
 library(shinycssloaders)
@@ -17,6 +19,14 @@ library(enrichplot)
 library(clusterProfiler)
 library(org.Hs.eg.db)
 library(AnnotationDbi)
+library(VennDiagram)
+library(eulerr)
+library(plotly)
+library(heatmaply)
+library(tidyverse)
+library(htmlwidgets)
+library(ggplotify)
+library(shinyfullscreen)
 library(UpSetR, include.only = c("upset", "fromList"))
 
 
@@ -38,10 +48,20 @@ footerHTML <- function() {  # defines style of the footer
 }
 
 
+titleHTML <- function() {  # defines style of the footer
+  "
+      <div>
+        <h5 style='color:white;'>Select first comparison</h5>
+        <span>&nbsp</span>
+      </div>
+  "
+}
+
+
 # colors used in heatmap
 mypalette <- brewer.pal(11,"RdYlBu")
 morecols <- colorRampPalette(mypalette)
-
+myCol2 <- brewer.pal(3, "Pastel2")
 
 ########################################### shiny app ########################################
 
@@ -117,11 +137,11 @@ server <- function(input, output, session){
   
   studyInput <- reactive({
     if(input$study == "GSE66207"){
-      data <- data.frame(fread("data/GSE66207-All.txt"))
+      data <- data.frame(data.table::fread("data/GSE66207-All.txt"))
     } else if (input$study == "GSE99816"){
-      data <- data.frame(fread("data/GSE99816-All.txt"))
+      data <- data.frame(data.table::fread("data/GSE99816-All.txt"))
     } else {
-      data <- data.frame(fread("data/GSE164871-All.txt"))
+      data <- data.frame(data.table::fread("data/GSE164871-All.txt"))
     }
     
     on.exit(rm(data))
@@ -148,7 +168,7 @@ server <- function(input, output, session){
         "STEN vs INF",
         "STEN vs NINF")
     } else {
-      c("CD vs Healthy control")
+      c("Crohn vs Control")
       
     }
   })
@@ -158,7 +178,7 @@ server <- function(input, output, session){
     updateSelectInput(
       session,
       inputId = "comparison",
-      label = "Select Comparison",
+      #label = "Select Comparison",
       choices = comparisons(),
       selected = comparisons()[1]
     )
@@ -227,6 +247,7 @@ server <- function(input, output, session){
   })
   
   source(file.path("server", "mainTable.R"), local=TRUE)$value
+  source(file.path("server", "boxPlot2.R"), local=TRUE)$value
   source(file.path("server", "summaryTable.R"), local=TRUE)$value
   source(file.path("server", "volcanoPlot.R"), local=TRUE)$value
   source(file.path("server", "heatmapPlot.R"), local=TRUE)$value
@@ -234,6 +255,16 @@ server <- function(input, output, session){
   source(file.path("server", "KEGGPlot.R"), local=TRUE)$value
   source(file.path("server", "upsetPlot.R"), local=TRUE)$value
   source(file.path("server", "downloadTable.R"), local=TRUE)$value
+  
+  # source(file.path("mainTable.R"), local=TRUE)$value
+  # source(file.path("boxPlot2.R"), local=TRUE)$value
+  # source(file.path("summaryTable.R"), local=TRUE)$value
+  # source(file.path("volcanoPlot.R"), local=TRUE)$value
+  # source(file.path("heatmapPlot.R"), local=TRUE)$value
+  # source(file.path("GOPlot.R"), local=TRUE)$value
+  # source(file.path("KEGGPlot.R"), local=TRUE)$value
+  # source(file.path("upsetPlot.R"), local=TRUE)$value
+  # source(file.path("downloadTable.R"), local=TRUE)$value
   
 }
 

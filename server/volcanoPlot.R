@@ -43,12 +43,17 @@ output$volcano <- renderPlot({
   p + 
     geom_point()+
     theme_bw() +
-    scale_size_continuous(guide = "none") +  
+    scale_size_continuous(guide = "none") + 
     scale_color_manual(values = c("Unchanged" = "gray",
-                                  "Down-reg protein-coding gene" = "firebrick1",
-                                  "Up-reg protein-coding gene" = "dodgerblue3",
-                                  "Down-reg lncRNA" = "seagreen4",
-                                  "Up-reg lncRNA" = "purple4")) +
+                                  "Down-reg protein-coding gene" = "darkorchid",
+                                  "Up-reg protein-coding gene" = "#FE9929",
+                                  "Down-reg lncRNA" = "dodgerblue3",
+                                  "Up-reg lncRNA" = "#43BA8F")) +
+    # scale_color_manual(values = c("Unchanged" = "gray",
+    #                               "Down-reg protein-coding gene" = "firebrick1",
+    #                               "Up-reg protein-coding gene" = "dodgerblue3",
+    #                               "Down-reg lncRNA" = "seagreen4",
+    #                               "Up-reg lncRNA" = "purple4")) +
     guides(colour = guide_legend(override.aes = list(size=1.5)))+
     theme(axis.title = element_text(size=18), 
           axis.text=element_text(size=11), 

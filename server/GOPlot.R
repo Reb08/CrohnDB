@@ -51,42 +51,75 @@ GO_results <- reactive({
 
 ########################### Plot ###################################################
 
-output$GO <- renderPlot({
+output$GO <- renderPlotly({
   
-  tryCatch({
+  if (nrow(Go_analysis_data()) == 0) {
     
-    if(is.null(GO_results())) {
-      message <- "Sorry, no enough DEGs identified"
-      plot.new()
-      text(0.5, 0.5, message, cex = 1.2)
-    } else if (nrow(GO_results()$result) == 0) {
-      message <- "Sorry, no enriched terms found"
-      plot.new()
-      text(0.5, 0.5, message, cex = 1.2)
-    } else {
-      gostplot(GO_results(), capped = F, interactive = F) +
-        theme(axis.title.x = element_text(size=2),
-              axis.title.y = element_text(size=18),
-              axis.text = element_text(size=15),
-              axis.text.x = element_text(size=17),
-              plot.title=element_text(size=18))
-    }
-  },
-  error = function(e){
-    if(grepl("Error in gost: Missing query", e$message)) {
-      message <- "Sorry, no enough DEGs identified"
-    } else if (grepl("cannot coerce type 'closure' to vector of type 'character'", e$message)){
-      message <- "Sorry, no enough DEGs identified"
-    } else if (grepl("Error in combine_vars: Faceting variables must have at least one value", e$message)) {
-      message <- "Sorry, no enriched terms found"
-    }
+    shinyjs::show("no_DEGs")
+    shinyjs::hide("no_terms")
     
-    plot.new()
-    text(0.5, 0.5, message, cex = 1.2)
-  }
-  )
-  
+  } else if (length(GO_results()) == 0) {
+    
+    shinyjs::hide("no_DEGs")
+    shinyjs::show("no_terms")
+    
+  } else {
+    
+    shinyjs::hide("no_DEGs")
+    shinyjs::hide("no_terms")
+    
+    p <- gostplot(GO_results(), capped = F, interactive = F) +
+      theme(axis.title.x = element_blank(),
+            axis.title.y = element_text(size=14),
+            axis.text = element_text(size=12),
+            axis.text.x = element_text(size=13),
+            plot.title=element_blank())
+            # plot.title=element_text(size=14))
+    
+    p <- p %>% ggplotly()
+    p
+    
+  } 
+
 })
+
+# output$GO <- renderPlotly({
+# 
+#   tryCatch({
+# 
+#     if(is.null(GO_results())) {
+#       message <- "Sorry, no enough DEGs identified"
+#       plot.new()
+#       text(0.5, 0.5, message, cex = 1.2)
+#     } else if (nrow(GO_results()$result) == 0) {
+#       message <- "Sorry, no enriched terms found"
+#       plot.new()
+#       text(0.5, 0.5, message, cex = 1.2)
+#     } else {
+#       p <- gostplot(GO_results(), capped = F, interactive = T) +
+#         theme(axis.title.x = element_text(size=2),
+#               axis.title.y = element_text(size=18),
+#               axis.text = element_text(size=15),
+#               axis.text.x = element_text(size=17),
+#               plot.title=element_text(size=18))
+#       p %>% ggplotly()
+#     }
+#   },
+#   error = function(e){
+#     if(grepl("Error in gost: Missing query", e$message)) {
+#       message <- "Sorry, no enough DEGs identified"
+#     } else if (grepl("cannot coerce type 'closure' to vector of type 'character'", e$message)){
+#       message <- "Sorry, no enough DEGs identified"
+#     } else if (grepl("Error in combine_vars: Faceting variables must have at least one value", e$message)) {
+#       message <- "Sorry, no enriched terms found"
+#     }
+# 
+#     plot.new()
+#     text(0.5, 0.5, message, cex = 1.2)
+#   }
+#   )
+# 
+# })
 
 
 ########################### Table ################################################### 

@@ -22,3 +22,24 @@ output$table <- DT::renderDataTable({
   )
   
 })
+
+
+data <- reactive({
+  studyInput()[studyInput()$Comparison == input$comparison, ]
+})
+
+output$downloadResultTable <- downloadHandler(
+  
+  # This function returns a string which tells the client browser what name to use when saving the file.
+  filename = function() {
+    paste(input$study, "-", input$comparison, "-Result_table.tsv", sep = "")
+  },
+  
+  # This function should write data to a file given to it by the argument 'file'.
+  content = function(file) {
+    
+    # Write to a file specified by the 'file' argument
+    write.table(data(), file,
+                row.names = FALSE, quote=F, sep="\t")
+  }
+)
